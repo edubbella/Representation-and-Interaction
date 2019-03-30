@@ -1,34 +1,42 @@
-hsa(SD, COMP, OBS, HS, List):-
+hsa(SD, COMP, OBS, HS, HSS):-
     not(tp(SD, COMP, OBS, HS, _)),
-    List = [HS].
+    HSS = [HS].
 
-hsa(SD, COMP, OBS, HS, List):-
+hsa(SD, COMP, OBS, HS, HSS):-
     tp(SD, COMP, OBS, HS, CS),
-    forall_hsa(SD, COMP, OBS, HS, List, CS).
+    forall_hsa(SD, COMP, OBS, HS, HSS, CS).
 
-forall_hsa(_, _, _, _, List, []):-
-    List = [].
+forall_hsa(_, _, _, _, HSS, []):-
+    HSS = [].
 
-forall_hsa(SD, COMP, OBS, HS, List, [X|Y]):-
+forall_hsa(SD, COMP, OBS, HS, HSS, [X|Y]):-
     append(HS, [X], NewHS),
-    hsa(SD, COMP, OBS, NewHS, List1),
-    forall_hsa(SD, COMP, OBS, HS, List2, Y),
-    append(List1, List2, List).
+    hsa(SD, COMP, OBS, NewHS, HSS1),
+    forall_hsa(SD, COMP, OBS, HS, HSS2, Y),
+    append(HSS1, HSS2, HSS).
 
 minimal_hsa(SD, COMP, OBS, HS, Minimal):-
     hsa(SD, COMP, OBS, HS, List),
     lsort(List,AscendingList),
     reverse(AscendingList, DescendingList),
-    recursive_min_supersets(DescendingList, Minimal).
+    remove_supersets(DescendingList, Minimal).
 
-recursive_min_supersets([], MinimalList):-
+remove_supersets([], MinimalList):-
     MinimalList = [].
 
-recursive_min_supersets([A|B], MinimalList):-
-    recursive_min_supersets(B, ML2),
-    (   not(is_superset(A, ML2)) ->
-    append(ML2, [A], MinimalList);
+remove_supersets([X|Y], MinimalList):-
+    remove_supersets(Y, ML2),
+    (   not(has_subset_in_list(X, ML2)) ->
+    append(ML2, [X], MinimalList);
     MinimalList = ML2).
+
+has_subset_in_list(_, []):-
+    false.
+
+has_subset_in_list(Set, [X|Y]):-
+    (   subset(X, Set)->
+    true;
+    has_subset_in_list(Set, Y)).
 
 lsort([], []).
 lsort([H|T],[H|R]) :-
@@ -41,13 +49,7 @@ lsort([F,S|T], R) :-
         append(T,[F],X),
         lsort([S|X], R).
 
-is_superset(_, []):-
-    false.
 
-is_superset(SuperSet, [A|B]):-
-    (   subset(A, SuperSet)->
-    true;
-    is_superset(SuperSet, B)).
 
 
 

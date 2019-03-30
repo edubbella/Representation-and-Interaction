@@ -4,15 +4,15 @@ hsa(SD, COMP, OBS, HS, HSS):-
 
 hsa(SD, COMP, OBS, HS, HSS):-
     tp(SD, COMP, OBS, HS, CS),
-    forall_hsa(SD, COMP, OBS, HS, HSS, CS).
+    forall_hsa(SD, COMP, OBS, HS, CS, HSS).
 
-forall_hsa(_, _, _, _, HSS, []):-
+forall_hsa(_, _, _, _, [], HSS):-
     HSS = [].
 
-forall_hsa(SD, COMP, OBS, HS, HSS, [X|Y]):-
+forall_hsa(SD, COMP, OBS, HS, [X|Y], HSS):-
     append(HS, [X], NewHS),
     hsa(SD, COMP, OBS, NewHS, HSS1),
-    forall_hsa(SD, COMP, OBS, HS, HSS2, Y),
+    forall_hsa(SD, COMP, OBS, HS, Y, HSS2),
     append(HSS1, HSS2, HSS).
 
 minimal_hsa(SD, COMP, OBS, HS, Minimal):-
