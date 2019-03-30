@@ -16,10 +16,10 @@ forall_hsa(SD, COMP, OBS, HS, [X|Y], HSS):-
     append(HSS1, HSS2, HSS).
 
 minimal_hsa(SD, COMP, OBS, HS, Minimal):-
-    hsa(SD, COMP, OBS, HS, List),
-    lsort(List,AscendingList),
-    reverse(AscendingList, DescendingList),
-    remove_supersets(DescendingList, Minimal).
+    hsa(SD, COMP, OBS, HS, HSS),
+    lsort(HSS,AscendingHSS),
+    reverse(AscendingHSS, DescendingHSS),
+    remove_supersets(DescendingHSS, Minimal).
 
 remove_supersets([], MinimalList):-
     MinimalList = [].
