@@ -1,3 +1,25 @@
+% -----------------------------------------------------------------------------
+%  minimal_hsa(+SD,+COMP, +OBS, +HS, -Minimal)  
+%             -  Determines a minimal set of diagnosis for the diagnostic problem
+%                (SD,COMP-HS,OBS).            
+%
+%  SD: list of first-order formula, where variables are understood to quantify
+%      over elements in COMP
+%  COMP: set of all components
+%  OBS: set of (ground) facts
+%  HS: set of components assumed to be abnormal
+
+
+minimal_hsa(SD, COMP, OBS, HS, Minimal):-
+    hsa(SD, COMP, OBS, HS, HSS),
+    lsort(HSS,AscendingHSS),
+    reverse(AscendingHSS, DescendingHSS),
+    remove_supersets(DescendingHSS, Minimal).
+
+%  hsa(+SD,+COMP, +OBS, +HS, -HSS)  
+%             -  Determines a set of hitting sets for the diagnostic problem
+%                (SD,COMP-HS,OBS).             
+
 hsa(SD, COMP, OBS, HS, HSS):-
     not(tp(SD, COMP, OBS, HS, _)),
     HSS = [HS].
@@ -15,11 +37,9 @@ forall_hsa(SD, COMP, OBS, HS, [X|Y], HSS):-
     forall_hsa(SD, COMP, OBS, HS, Y, HSS2),
     append(HSS1, HSS2, HSS).
 
-minimal_hsa(SD, COMP, OBS, HS, Minimal):-
-    hsa(SD, COMP, OBS, HS, HSS),
-    lsort(HSS,AscendingHSS),
-    reverse(AscendingHSS, DescendingHSS),
-    remove_supersets(DescendingHSS, Minimal).
+%  remove_supersets(+List,-MinimalList)  
+%             -  Removes all list in List which is a superset of a list 
+%             that is previously contained
 
 remove_supersets([], MinimalList):-
     MinimalList = [].
@@ -30,6 +50,10 @@ remove_supersets([X|Y], MinimalList):-
     append(ML2, [X], MinimalList);
     MinimalList = ML2).
 
+%  has_subset_in_list(+Set, +List)  
+%             -  Boolean function that returns ture if a passed list
+%             is already present in the Set given to the function.
+
 has_subset_in_list(_, []):-
     false.
 
@@ -37,6 +61,8 @@ has_subset_in_list(Set, [X|Y]):-
     (   subset(X, Set)->
     true;
     has_subset_in_list(Set, Y)).
+
+%  Source of function: https://github.com/charlespwd/project-title
 
 lsort([], []).
 lsort([H|T],[H|R]) :-
