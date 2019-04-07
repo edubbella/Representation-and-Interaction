@@ -1,17 +1,16 @@
 % -----------------------------------------------------------------------------
-%  minimal_hsa(+SD,+COMP, +OBS, +HS, -Minimal)  
+%  minimal_hsa(+SD,+COMP, +OBS, -Minimal)  
 %             -  Determines a minimal set of diagnosis for the diagnostic problem
-%                (SD,COMP-HS,OBS).            
+%                (SD,COMP,[],OBS).            
 %
 %  SD: list of first-order formula, where variables are understood to quantify
 %      over elements in COMP
 %  COMP: set of all components
 %  OBS: set of (ground) facts
-%  HS: set of components assumed to be abnormal
 
 
-minimal_hsa(SD, COMP, OBS, HS, Minimal):-
-    hsa(SD, COMP, OBS, HS, HSS),
+minimal_hsa(SD, COMP, OBS, Minimal):-
+    hsa(SD, COMP, OBS, [], HSS),
     lsort(HSS,AscendingHSS),
     reverse(AscendingHSS, DescendingHSS),
     remove_supersets(DescendingHSS, Minimal).
