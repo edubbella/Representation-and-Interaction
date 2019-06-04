@@ -80,15 +80,15 @@ validDistribution(OneSide,OtherSide) :-
 
 //Checking if the two task sets are indeed the total task. add code
 checkTotalTask(OneSide, OtherSide, TotalTask):-
-	.concat(OneSide, OtherSide, TwoSides) &
-	.intersection(TwoSides, TotalTask, IntersectionList) &
-	.empty(IntersectionList) & // If intersection list is empty then the function will return an empty list
-	.print("Hello").
-
+	.concat(OneSide, OtherSide, TwoSides) & 
+	.sort(TwoSides, SortTwoSides) &
+	SortTwoSides == TotalTask. //Check if the concateneded list is the same as the total task
+	
 //Checking if two sets are unique. 
 uniqueSets(OneSide, OtherSide):-
 	.intersection(OneSide, OtherSide, IntersectionList) &
 	.empty(IntersectionList).
+	
 	
 //I know when a task is individual rational.
 indiRatio(...) //enter your code here.

@@ -75,20 +75,22 @@ originalTask([d,e]).
 // having the total task set (b,c,d,e,f for example). You will need a way for totalTask
 //to get the total task set when agents need to calculate the total task set by themselves.
 validDistribution(OneSide,OtherSide) :-
-	.print("Hello") &
 	checkTotalTask(OneSide,OtherSide,[b,c,d,e,f]) & //Adjust [b,c,d,e,f] with a totalTask belief later on in the assignment.
 	uniqueSets(OneSide,OtherSide).
 
 //Checking if the two task sets are indeed the total task. add code
 checkTotalTask(OneSide, OtherSide, TotalTask):-
-	.concat(OneSide, OtherSide, TwoSides) &
-	.intersection(TwoSides, TotalTask, IntersectionList) &
-	.empty(IntersectionList). // If intersection list is empty then the function will return an empty list
-
+	.concat(OneSide, OtherSide, TwoSides) & 
+	.sort(TwoSides, SortTwoSides) &
+	SortTwoSides == TotalTask. //Check if the concateneded list is the same as the total task
+	
 //Checking if two sets are unique. 
 uniqueSets(OneSide, OtherSide):-
 	.intersection(OneSide, OtherSide, IntersectionList) &
 	.empty(IntersectionList).
+	
+utilityCost(TasksAgent, Costs):-
+	.
 	
 //I know when a task is individual rational.
 //indiRatio(...) //enter your code here.???
@@ -175,6 +177,11 @@ sortSet([[TheirSide,MySide]|OtherDeals],ToBeSorted,CurBestDeal,SetOfSortedDeals)
 	<-
 	.print("Hi");
 	?validDistribution([b,f],[c,d,e]).
+//[b,c,d,e,f]
+	
+-!testCode
+	:  true
+    <- .print("Failed to achieve goal '!testGoal'").
 
 +!getBetterDeal
 	: not theirOriginalTask(Task)
